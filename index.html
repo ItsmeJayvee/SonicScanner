@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <title>SonicScanner</title>
+</head>
+<body>
+    
+<div class="row">
+    <div class="col m4 l4"></div>
+    <div class="col s12 m4 l4">
+        <div class="card">
+            <div class="card-content">
+                <div id="scanner" class="row">
+                    <div class="col s12 m12 l12 center-align">
+                        <video id="preview"></video>
+                    </div>
+                    <div class="col s12 m12 l12 center-align">
+                        <label class="btn blue active">
+                            <i class="material-icons right">camera_front</i>
+                            <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
+                        </label>
+                        <label class="btn blue">
+                            <i class="material-icons right">camera_rear</i>
+                            <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col m4 l4"></div>
+</div>
+
+<script src="script/jquery.min.js"></script>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
+<script type="text/javascript">
+
+    var firebaseConfig = {
+        apiKey: "AIzaSyBojI0YDrNZalZobJHPgQUmLoCGe8QjOac",
+        authDomain: "sonicqrscanner.firebaseapp.com",
+        databaseURL: "https://sonicqrscanner.firebaseio.com",
+        projectId: "sonicqrscanner",
+        storageBucket: "sonicqrscanner.appspot.com",
+        messagingSenderId: "763781849620",
+        appId: "1:763781849620:web:bdecd46867739d8717fd01"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 3, mirror: false });
+
+    scanner.addListener('scan',function(content){
+        
+    });
+
+    Instascan.Camera.getCameras().then(function (cameras){
+        if(cameras.length>0){
+            scanner.start(cameras[0]);
+            $('[name="options"]').on('change',function(){
+                if($(this).val()==1){
+                    if(cameras[0]!=""){
+                        scanner.start(cameras[0]);
+                    }else{
+                        alert('No Front camera found!');
+                    }
+                }else if($(this).val()==2){
+                    if(cameras[1]!=""){
+                        scanner.start(cameras[1]);
+                    }else{
+                        alert('No Back camera found!');
+                    }
+                }
+            });
+        }else{
+            console.error('No cameras found.');
+            alert('No cameras found.');
+        }
+    }).catch(function(e){
+        console.error(e);
+        alert(e);
+    });
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+<script src="js/materialize.min.js"></script>
+</body>
+</html>
