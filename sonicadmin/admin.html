@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/qr.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin Panel</title>
+</head>
+<body>
+<nav class="blue lighten-3">
+    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text">menu</i></a>
+</nav>
+<ul id="slide-out" class="sidenav sidenav-fixed blue lighten-3">
+    <li><a href="#!" id="logoutBtn">Logout</a></li>
+</ul>
+<div class="row">
+    <div class="col m3 l3"></div>
+    <div class="col s12 m9 l9">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="input-field col s8 m8 l8">
+                                    <i class="material-icons prefix">search</i>
+                                    <input type="text" name="dqr" id="dqr" class="validate">
+                                    <label for="dqr">Search DQR</label>
+                                </div>
+                                <div class="col s12 m12 l12">
+                                    <table class="striped highlight centered">
+                                        <thead>
+                                            <tr>
+                                                <th>DQR Code</th>
+                                                <th>Full name</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="printSearch">
+                                        </tbody>
+                                    </table>
+                                    <h5 class="center-align red-text hide" style="font-size: small;" id="searchErr">Sorry, no DQR code found</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-fixed-footer" id="modalEmployee">
+    <div class="modal-content">
+        <div class="row">
+            <div class="input-field col s12 m12 l12 center-align">
+                <img src="/img/blank.png" id="profilePic" height="150" width="150">
+                <progress class="hide" value="0" max="100" id="uploader">0%</progress>
+                <input class="hide" type="file" value="upload" id="fileButton">
+                <button class="btn-flat btn-small waves-effect waves-light" id="uploadBtn"><u>Update Photo</u></button>
+            </div>
+            <div class="input-field col s12 m12 l12">
+                <i class="material-icons prefix">code</i>
+                <input type="text" name="empdqrcode" id="empdqrcode" class="validate" readonly>
+                <label for="empdqrcode">DQR code</label>
+            </div>
+            <div class="input-field col s12 m12 l12">
+                <i class="material-icons prefix">account_circle</i>
+                <input type="text" name="fullname" id="fullname" class="validate">
+                <label for="fullname">Fullname</label>
+            </div>
+            <div class="input-field col s12 m12 l12 center-align">
+                <button class="btn-flat waves-effect waves-dark" id="updateBtn">Update</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn-flat waves-effect waves-dark" id="closeModal"><i class="material-icons">close</i></button>
+    </div>
+</div>
+
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12 m12 l12 center-align">
+                <i class="material-icons large green-text">verified_user</i>
+            </div>
+            <div class="col s12 m12 l12 center-align">
+                <h5>Employee successfully updated!</h5>
+            </div>
+            <div class="col s12 m12 l12 center-align">
+                <button class="btn-flat waves-effect waves-dark modal-close">confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/script/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+<script src="/js/materialize.min.js"></script>
+<script src="/script/admin.js"></script>
+</body>
+</html>

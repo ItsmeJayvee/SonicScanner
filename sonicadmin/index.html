@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/materialize.min.css">
+    <link rel="shortcut icon" href="/img/qr.ico" type="image/x-icon">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col m4 l4"></div>
+        <div class="col s12 m4 l4">
+            <div class="card">
+                <div class="card-content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="input-field col s12 m12 l12 center-align">
+                                <img src="/img/ssdi.png" height="100" width="250">
+                                <h5><b>Admin Panel Login</b></h5>
+                                <h6 class="red-text center-align" style="font-size: small;"><b class="hide" id="loginErr"></b></h6>
+                            </div>
+                            <div class="input-field col s12 m12 l12">
+                                <i class="material-icons prefix">email</i>
+                                <input type="email" name="email" id="email" class="validate">
+                                <label for="email">Email Address</label>
+                                <h6 class="center-align red-text hide" style="font-size: small;" id="emailErr"><b>Email field must not be empty!</b></h6>
+                            </div>
+                            <div class="input-field col s12 m12 l12">
+                                <i class="material-icons prefix">lock</i>
+                                <input type="password" name="password" id="password" class="validate">
+                                <label for="password">Password</label>
+                                <h6 class="center-align red-text hide" style="font-size: small;" id="passErr"><b>Password field must not be empty!</b></h6>
+                            </div>
+                            <div class="input-field col s12 m12 l12 center-align">
+                                <button class="btn waves-effect waves-ligh blue" id="loginBtn">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col m4 l4"></div>
+    </div>
+
+<script src="/script/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+<script src="/js/materialize.min.js"></script>
+<script src="/script/adminlogin.js"></script>
+</body>
+</html>

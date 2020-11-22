@@ -5,34 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="shortcut icon" href="img/qr.ico" type="image/x-icon">
     <title>SonicScanner</title>
 </head>
 <body>
-    
+<nav>
+    <div class="nav-wrapper blue">
+        <a href="#" class="brand-logo"><img src="img/ssdi.png" height="55"></a>
+    </div>
+</nav>
 <div class="row">
-    <div class="col m4 l4"></div>
-    <div class="col s12 m4 l4">
-        <div class="card">
-            <div class="card-content">
-                <div id="scanner" class="row">
-                    <div class="col s12 m12 l12 center-align">
-                        <video id="preview"></video>
+    <div class="col l4"></div>
+    <div class="col s12 m12 l4">
+        <div class="row">
+            <div class="col s12 m12 l12 center-align">
+                <div class="card">
+                    <div class="card-content">
+                        <video id="preview" height="250" width="250"></video>
                     </div>
-                    <div class="col s12 m12 l12 center-align">
-                        <label class="btn blue active">
-                            <i class="material-icons right">camera_front</i>
-                            <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
-                        </label>
-                        <label class="btn blue">
-                            <i class="material-icons right">camera_rear</i>
-                            <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
-                        </label>
-                    </div>
+                </div>
+            </div>
+            <div class="col s12 m12 l12 hide center-align">
+                <label class="btn blue active">
+                    <i class="material-icons right">camera_front</i>
+                    <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
+                </label>
+                <label class="btn blue">
+                    <i class="material-icons right">camera_rear</i>
+                    <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m12 l4">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center-align">
+                    <img src="img/blank.png" id="employeePhoto" height="250" width="250">
+                </div>
+                <div class="col s12 m12 l12">
+                    <table class="striped highlight centered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="printEmployee">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col m4 l4"></div>
 </div>
 
 <script src="script/jquery.min.js"></script>
@@ -52,11 +78,50 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    var db      = firebase.firestore();
+    var render  = document.querySelector('#printEmployee');
 
-    var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 3, mirror: false });
+    function renderEmployeeDetails(doc)
+    {
+        var d = new Date();
+
+        let tr          = document.createElement('tr');
+        let dateTD      = document.createElement('td');
+        let codeTD      = document.createElement('td');
+        let nameTD      = document.createElement('td');
+
+        dateTD.style.fontSize = "small";
+        codeTD.style.fontSize = "small";
+        nameTD.style.fontSize = "small";
+        dateTD.textContent = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
+        codeTD.textContent = doc.data().DQR;
+        nameTD.textContent = doc.data().fullName;
+
+        tr.appendChild(dateTD);
+        tr.appendChild(codeTD);
+        tr.appendChild(nameTD);
+        render.appendChild(tr);
+    }
+
+    var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 1, mirror: false });
 
     scanner.addListener('scan',function(content){
-        
+        db.collection('employees').where('DQR', '==', content).get().then(snapshot =>{
+            if(snapshot.empty){
+                db.collection('employees').add({
+                    DQR: content,
+                    photo: null,
+                    fullName: ""
+                });
+            }else{
+                snapshot.forEach(doc=>{
+                    if(doc.data().photo != null){
+                        employeePhoto.src = doc.data().photo
+                    }
+                    renderEmployeeDetails(doc);
+                });
+            }
+        });
     });
 
     Instascan.Camera.getCameras().then(function (cameras){
@@ -87,7 +152,6 @@
     });
 
 </script>
-<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
 <script src="js/materialize.min.js"></script>
 </body>
 </html>
