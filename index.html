@@ -12,6 +12,9 @@
 <nav>
     <div class="nav-wrapper blue">
         <a href="#" class="brand-logo"><img src="img/ssdi.png" height="55"></a>
+        <ul class="right">
+            <li><a href="#!" class="hide" id="logout">Logout<i class="material-icons right">exit_to_app</i></a></li>
+        </ul>
     </div>
 </nav>
 <div class="row">
@@ -22,6 +25,8 @@
                 <div class="card">
                     <div class="card-content">
                         <video id="preview" height="250" width="250"></video>
+                        <input type="hidden" id="getSiteCode">
+                        <input type="hidden" id="getSiteName">
                     </div>
                 </div>
             </div>
@@ -35,26 +40,126 @@
                     <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
                 </label>
             </div>
+            <div class="input-field col s12 m12 l12">
+                <input type="hidden" name="hiddenCode" id="hiddenCode">
+            </div>
         </div>
     </div>
     <div class="col s12 m12 l4">
         <div class="container">
             <div class="row">
-                <div class="col s12 m12 l12 center-align">
-                    <img src="img/blank.png" id="employeePhoto" height="250" width="250">
-                </div>
                 <div class="col s12 m12 l12">
                     <table class="striped highlight centered">
                         <thead>
                             <tr>
                                 <th>Date</th>
+                                <th>Time</th>
                                 <th>Code</th>
                                 <th>Name</th>
                             </tr>
                         </thead>
                         <tbody id="printEmployee">
+
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="siteModal">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center-align">
+                    <h5>Select a site</h5>
+                    <hr />
+                </div>
+                <div class="col s12 m12 l12 center-align">
+                    <ul id="buttons">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="sucessScan">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="input-field col s12 m12 l12 center-align">
+                    <i class="material-icons large green-text">verified_user</i>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <h5><b>Thank You!</b></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="remarksModal">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="input-field col s12 m12 l12 center-align">
+                    <i class="material-icons large red-text">error_outline</i>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <h6>Are you going In or Out?</h6>
+                </div>
+                <div class="input-field col s6 m6 l6 center-align">
+                    <button class="btn-large waves-effect waves-light green" id="inBtn">In</button>
+                </div>
+                <div class="input-field col s6 m6 l6 center-align">
+                    <button class="btn-large waves-effect waves-light red" id="outBtn">Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="input-field col s12 m12 l12 center-align">
+                    <img src="img/ssdi.png" height="100" width="150">
+                    <h6 class="red-text hide" style="font-size: small;" id="loginErr"></h6>
+                </div>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">email</i>
+                    <input type="email" name="email" id="email" class="validate">
+                    <label for="email">Email address</label>
+                    <h6 class="red-text hide center-align" id="emailErr"><b>Must not be empty!</b></h6>
+                </div>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">lock</i>
+                    <input type="password" name="password" id="password" class="validate">
+                    <label for="password">Password</label>
+                    <h6 class="red-text hide center-align" id="passErr"><b>Must not be empty!</b></h6>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <button class="btn waves-effect waves-light blue" id="loginButton">Login<i class="material-icons right">lock_open</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="loadingModal">
+    <div class="modal-content center-align">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
                 </div>
             </div>
         </div>
@@ -65,6 +170,7 @@
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
 <script type="text/javascript">
 
     var firebaseConfig = {
@@ -78,49 +184,205 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    var db      = firebase.firestore();
-    var render  = document.querySelector('#printEmployee');
+    var db              = firebase.firestore();
+    var render          = document.querySelector('#printEmployee');
+    var printBtn        = document.querySelector('#buttons');
+    var loginEmail      = document.getElementById('email');
+    var loginPass       = document.getElementById('password');
+    var hiddenSecret    = document.getElementById('hiddenCode');
 
-    function renderEmployeeDetails(doc)
-    {
-        var d = new Date();
+    $(document).ready(function(){
+        $('.modal').modal({
+            dismissible: false
+        });
+        $('#siteModal').modal('open');
+    });
 
-        let tr          = document.createElement('tr');
-        let dateTD      = document.createElement('td');
-        let codeTD      = document.createElement('td');
-        let nameTD      = document.createElement('td');
+    function renderButtons(doc){
 
-        dateTD.style.fontSize = "small";
-        codeTD.style.fontSize = "small";
-        nameTD.style.fontSize = "small";
-        dateTD.textContent = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
-        codeTD.textContent = doc.data().DQR;
-        nameTD.textContent = doc.data().fullName;
+        let li = document.createElement('li');
+        let siteButton = document.createElement('button');
+        let spacer = document.createElement('br');
 
-        tr.appendChild(dateTD);
-        tr.appendChild(codeTD);
-        tr.appendChild(nameTD);
-        render.appendChild(tr);
+        siteButton.setAttribute('class', 'btn-flat waves-effect waves-light');
+        siteButton.textContent = doc.data().siteName;
+
+        li.appendChild(siteButton);
+        printBtn.appendChild(spacer);
+        printBtn.appendChild(li);
+
+        siteButton.addEventListener('click', e=>{
+            getSiteCode.value = doc.data().siteCode;
+            getSiteName.value = doc.data().siteName;
+            var user = firebase.auth().currentUser;
+            if (user) {
+                $(document).ready(function(){
+                    $('#siteModal').modal('close');
+                    $('#loginModal').modal('close');
+                });
+            } else {
+                $(document).ready(function(){
+                    $('#siteModal').modal('close');
+                    $('#loginModal').modal('open');
+                });
+            }
+        });
     }
+
+    db.collection('sites').get().then(snapshot=>{
+        snapshot.forEach(doc=>{
+            renderButtons(doc);
+        });
+    });
+    
+    loginButton.addEventListener('click', e=>{
+        var email   = loginEmail.value;
+        var pass    = loginPass.value;
+        if(email == "" && pass == ""){
+            emailErr.classList.remove('hide');
+            passErr.classList.remove('hide');
+        }else if(email != "" && pass == ""){
+            emailErr.classList.add('hide');
+            passErr.classList.remove('hide');
+        }else if(email == "" && pass != ""){
+            emailErr.classList.remove('hide');
+            passErr.classList.add('hide');
+        }else{
+            emailErr.classList.add('hide');
+            passErr.classList.add('hide');
+            var promise = firebase.auth().signInWithEmailAndPassword(email, pass);
+            $(document).ready(function(){
+                $('#loginModal').modal('close');
+                $('#loadingModal').modal('open');
+            });
+            promise.catch(e=> loginErr.textContent = e.message);
+        }
+    });
 
     var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 1, mirror: false });
 
     scanner.addListener('scan',function(content){
-        db.collection('employees').where('DQR', '==', content).get().then(snapshot =>{
+        hiddenCode.value = content;
+        $(document).ready(function(){
+            $('#remarksModal').modal('open');
+        });
+    });
+
+    inBtn.addEventListener('click', e=>{
+        $(document).ready(function(){
+            $('#remarksModal').modal('close');
+            $('#sucessScan').modal('open');
+            setTimeout(function(){
+                $('#sucessScan').modal('close');
+            }, 2000);
+        });
+        var d = new Date();
+        db.collection('employees').where('DQR', '==', hiddenSecret.value).get().then(snapshot =>{
             if(snapshot.empty){
-                db.collection('employees').add({
-                    DQR: content,
-                    photo: null,
-                    fullName: ""
+                db.collection('reports').add({
+                    sitecode: getSiteCode.value,
+                    sitename: getSiteName.value,
+                    date: Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear(),
+                    month: Number(d.getMonth() + 1),
+                    date: d.getDate(),
+                    year: d.getFullYear(),
+                    DQR: hiddenSecret.value,
+                    fullname: "",
+                    remarks: "In"
                 });
-            }else{
-                snapshot.forEach(doc=>{
-                    if(doc.data().photo != null){
-                        employeePhoto.src = doc.data().photo
-                    }
-                    renderEmployeeDetails(doc);
-                });
+                var table = document.getElementById('printEmployee');
+                var row = table.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
+                cell2.innerHTML = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+                cell3.innerHTML = hiddenSecret.value;
+                cell4.innerHTML = "";
             }
+            snapshot.forEach(doc=>{
+                var table   = document.getElementById('printEmployee');
+                var row     = table.insertRow(0);
+                var cell1   = row.insertCell(0);
+                var cell2   = row.insertCell(1);
+                var cell3   = row.insertCell(2);
+                var cell4   = row.insertCell(3);
+                cell1.innerHTML = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
+                cell2.innerHTML = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+                cell3.innerHTML = doc.data().DQR;
+                cell4.innerHTML = doc.data().fullName;
+                db.collection('reports').add({
+                    sitecode: getSiteCode.value,
+                    sitename: getSiteName.value,
+                    month: Number(d.getMonth() + 1),
+                    date: d.getDate(),
+                    year: d.getFullYear(),
+                    time: d.getHours()+":"+d.getMinutes()+":"+d.getSeconds(),
+                    DQR: hiddenSecret.value,
+                    fullname: doc.data().fullName,
+                    remarks: "In"
+                });
+            });
+        });
+    });
+
+    outBtn.addEventListener('click', e=>{
+        $(document).ready(function(){
+            $('#remarksModal').modal('close');
+            $('#sucessScan').modal('open');
+            setTimeout(function(){
+                $('#sucessScan').modal('close');
+            }, 2000);
+        });
+        var d = new Date();
+        db.collection('employees').where('DQR', '==', hiddenSecret.value).get().then(snapshot =>{
+            if(snapshot.empty){
+                db.collection('reports').add({
+                    sitecode: getSiteCode.value,
+                    sitename: getSiteName.value,
+                    month: Number(d.getMonth() + 1),
+                    date: d.getDate(),
+                    year: d.getFullYear(),
+                    time: d.getHours()+":"+d.getMinutes()+":"+d.getSeconds(),
+                    DQR: hiddenSecret.value,
+                    fullname: "",
+                    remarks: "Out"
+                });
+                var table = document.getElementById('printEmployee');
+                var row = table.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
+                cell2.innerHTML = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+                cell3.innerHTML = hiddenSecret.value;
+                cell4.innerHTML = "";
+            }
+            snapshot.forEach(doc=>{
+                var table   = document.getElementById('printEmployee');
+                var row     = table.insertRow(0);
+                var cell1   = row.insertCell(0);
+                var cell2   = row.insertCell(1);
+                var cell3   = row.insertCell(2);
+                var cell4   = row.insertCell(3);
+                cell1.innerHTML = Number(d.getMonth() + 1)+"/"+d.getDate()+"/"+d.getFullYear();
+                cell2.innerHTML = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+                cell3.innerHTML = doc.data().DQR;
+                cell4.innerHTML = doc.data().fullName;
+                db.collection('reports').add({
+                    sitecode: getSiteCode.value,
+                    sitename: getSiteName.value,
+                    month: Number(d.getMonth() + 1),
+                    date: d.getDate(),
+                    year: d.getFullYear(),
+                    time: d.getHours()+":"+d.getMinutes()+":"+d.getSeconds(),
+                    DQR: hiddenSecret.value,
+                    fullname: doc.data().fullName,
+                    remarks: "Out"
+                });
+            });
         });
     });
 
@@ -151,6 +413,35 @@
         alert(e);
     });
 
+    logout.addEventListener('click', e=>{
+        firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        }).catch(function(error) {
+        // An error happened.
+        });
+    });
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+           if(user.uid == 'Cg6eX1qq3HRcWc2BTGXOeqezORm1'){
+                logout.classList.remove('hide');
+                $(document).ready(function(){
+                    $('#loadingModal').modal('close');
+                });
+           }else{
+                firebase.auth().signOut().then(function() {
+                // Sign-out successful.
+                }).catch(function(error) {
+                // An error happened.
+                });
+           }
+        } else {
+            $(document).ready(function(){
+                $('#siteModal').modal('open');
+            });
+            logout.classList.add('hide');
+        }
+    });
 </script>
 <script src="js/materialize.min.js"></script>
 </body>

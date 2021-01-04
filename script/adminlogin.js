@@ -15,6 +15,12 @@
     var logEmail = document.getElementById('email');
     var logPass = document.getElementById('password');
 
+    $(document).ready(function(){
+        $('.modal').modal({
+            dismissible: false
+        });
+    });
+
     loginBtn.addEventListener('click', e=>{
         if(email.value == "" && password.value == ""){
             emailErr.classList.remove('hide');
@@ -33,7 +39,9 @@
             const passes    = logPass.value;
             const auth      = firebase.auth()
             const promise   = auth.signInWithEmailAndPassword(emails, passes);
-            
+            $(document).ready(function(){
+                $('#loadingModal').modal('open');
+            });
             promise.catch(function(error){
                 loginErr.classList.remove('hide');
                 loginErr.textContent = error.message;

@@ -13,7 +13,10 @@
 <nav class="blue lighten-3">
     <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text">menu</i></a>
 </nav>
-<ul id="slide-out" class="sidenav sidenav-fixed blue lighten-3">
+<ul id="slide-out" class="sidenav sidenav-close sidenav-fixed blue lighten-3">
+    <li><a href="#employeeDiv" id="employeeBtn">Employees</a></li>
+    <li><a href="#siteDiv" id="siteBtn">View Site</a></li>
+    <li><a href="#scansDiv" id="reportBtn">View Scans</a></li>
     <li><a href="#!" id="logoutBtn">Logout</a></li>
 </ul>
 <div class="row">
@@ -21,28 +24,177 @@
     <div class="col s12 m9 l9">
         <div class="container">
             <div class="row">
-                <div class="col s12 m12 l12">
+                <div class="col s12 m12 l12 center-align" id="home">
+                    <img src="/img/ssdi.png" class="responsive-img" id="sonic">
+                </div>
+                <div class="col s12 m12 l12 hide" id="employeeDiv">
                     <div class="card">
                         <div class="card-content">
                             <div class="row">
-                                <div class="input-field col s8 m8 l8">
-                                    <i class="material-icons prefix">search</i>
-                                    <input type="text" name="dqr" id="dqr" class="validate">
-                                    <label for="dqr">Search DQR</label>
+                                <div class="input-field col s12 m12 l12 center-align">
+                                    <h5><b>Employee Info</b></h5>
+                                    <hr />
                                 </div>
-                                <div class="col s12 m12 l12">
-                                    <table class="striped highlight centered">
-                                        <thead>
-                                            <tr>
-                                                <th>DQR Code</th>
-                                                <th>Full name</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="printSearch">
-                                        </tbody>
-                                    </table>
-                                    <h5 class="center-align red-text hide" style="font-size: small;" id="searchErr">Sorry, no DQR code found</h5>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="input-field col s12 m12 l12">
+                                            <i class="material-icons prefix">search</i>
+                                            <input type="text" name="dqr" id="dqr" class="validate">
+                                            <label for="dqr">Search DQR</label>
+                                        </div>
+                                        <div class="input-field col s12 m6 l6 center-align">
+                                            <button class="btn-flat waves-effect waves-light" id="addEmployeeBtn">Create New Employee</button>
+                                        </div>
+                                        <div class="input-field col s12 m6 l6 center-align">
+                                            <button class="btn-flat waves-effect waves-light" id="viewAllEmployeeBtn">View All Employees</button>
+                                        </div>
+                                        <div class="input-field col s12 m12 l12 center-align hide" id="exportEmployeesDiv">
+                                            <button class="btn waves-effect waves-light green" id="exportEmployeesBtn">Export to Excel<i class="material-icons right">file_download</i></button>
+                                        </div>
+                                        <div class="col s12 m12 l12">
+                                            <table class="striped highlight centered" id="employeeTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>DQR Code</th>
+                                                        <th>Full name</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="printSearch">
+                                                    <tr class="hide" id="printEmployeeDQR">
+                                                        <td id="printQR"></td>
+                                                        <td id="printNmae"></td>
+                                                        <td class="hide" id="printBtn"><button class="btn waves-effect waves-light blue">View</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5 class="center-align red-text hide" style="font-size: small;" id="searchErr">Sorry, no DQR code found</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m12 l12 hide" id="siteDiv">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="input-field col s12 m12 l12 center-align">
+                                    <h5><b>Site Info</b></h5>
+                                    <hr />
+                                    <h6 class="green-text hide" id="successSite">Site added!</h6>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="input-field col s12 m12 l12 center-align">
+                                            <button class="blue btn waves-effect waves-light" id="addnewsiteButton">Add New Site</button>
+                                        </div>
+                                        <div class="input-field col s12 m12 l12" id="siteTable">
+                                            <table class="striped highlight centered" id="tableSaSite">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Site Code</th>
+                                                        <th>Site Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="sitetableBody">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row hide" id="addNewSiteDiv">
+                                        <div class="input-field col s12 m12 l12 center-align">
+                                            <i class="material-icons prefix">location_on</i>
+                                            <input type="text" name="sitecode" id="sitecode" class="validate">
+                                            <label for="sitecode">Enter Site Code</label>
+                                            <h6 class="center-align hide red-text" id="siteCodeErr"><b>Must not be empty!</b></h6>
+                                        </div>
+                                        <div class="input-field col s12 m12 l12 center-align">
+                                            <i class="material-icons prefix">business</i>
+                                            <input type="text" name="sitename" id="sitename" class="validate">
+                                            <label for="sitename">Enter Site Name</label>
+                                            <h6 class="center-align hide red-text" id="siteNameErr"><b>Must not be empty!</b></h6>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6 center-align">
+                                                <button class="blue btn waves-effect waves-light" id="submitSiteBtn">Submit</button>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6 center-align">
+                                                <button class="red btn waves-effect waves-light" id="backSubmitBtn">Back</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m12 l12 hide" id="scansDiv">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col s12 m12 l12 center-align">
+                                    <h5><b>Scans Report</b></h5>
+                                    <hr />
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="input-field col s6 m4 l4">
+                                            <i class="material-icons prefix">report</i>
+                                            <select name="reportType" id="reportType">
+                                                <option value="" disabled selected>Select Report</option>
+                                                <option value="Monthly">Monthly</option>
+                                                <option value="Daily">Daily</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s6 m4 l4 hide" id="monthlyReport">
+                                            <select name="monthReport" id="monthReport">
+                                                <option value="" disabled selected>Select Month</option>
+                                                <option value="01">January</option>
+                                                <option value="02">February</option>
+                                                <option value="03">March</option>
+                                                <option value="04">April</option>
+                                                <option value="05">May</option>
+                                                <option value="06">June</option>
+                                                <option value="07">July</option>
+                                                <option value="08">August</option>
+                                                <option value="09">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s6 m4 l4 hide" id="dailyReport">
+                                            <i class="material-icons prefix">event</i>
+                                            <input type="text" id="reportDate" class="datepicker">
+                                            <label for="reportDate">Select Date</label>
+                                            <h6 class="red-text hide center-align" id="dateErr">Must not be empty!</h6>
+                                        </div>
+                                        <div class="input-field col s12 m4 l4 center-align">
+                                            <button class="btn waves-effect waves-light blue" id="dateSubmit">Submit</button>
+                                        </div>
+                                        <div class="col s12 m12 l12 center-align">
+                                            <button class="btn waves-effect waves-light hide blue" id="exprtExcelBtn">Export Excel<i class="material-icons right">file_download</i></button>
+                                            <table class="striped highlight centered responsive-table" id="reportTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Site</th>
+                                                        <th>Date</th>
+                                                        <th>Time</th>
+                                                        <th>QR Code</th>
+                                                        <th>Name</th>
+                                                        <th>Remarks</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="printReport">
+                                                </tbody>
+                                            </table>
+                                            <h5 class="red-text hide" id="noScansErr">No results found</h5>
+                                            <h5 class="red-text hide" id="invalid">Invalid Filter</h5>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -55,30 +207,54 @@
 
 <div class="modal modal-fixed-footer" id="modalEmployee">
     <div class="modal-content">
-        <div class="row">
-            <div class="input-field col s12 m12 l12 center-align">
-                <img src="/img/blank.png" id="profilePic" height="150" width="150">
-                <progress class="hide" value="0" max="100" id="uploader">0%</progress>
-                <input class="hide" type="file" value="upload" id="fileButton">
-                <button class="btn-flat btn-small waves-effect waves-light" id="uploadBtn"><u>Update Photo</u></button>
-            </div>
-            <div class="input-field col s12 m12 l12">
-                <i class="material-icons prefix">code</i>
-                <input type="text" name="empdqrcode" id="empdqrcode" class="validate" readonly>
-                <label for="empdqrcode">DQR code</label>
-            </div>
-            <div class="input-field col s12 m12 l12">
-                <i class="material-icons prefix">account_circle</i>
-                <input type="text" name="fullname" id="fullname" class="validate">
-                <label for="fullname">Fullname</label>
-            </div>
-            <div class="input-field col s12 m12 l12 center-align">
-                <button class="btn-flat waves-effect waves-dark" id="updateBtn">Update</button>
+        <div class="container">
+            <div class="row">
+                <input type="hidden" id="documentID" name="documentID">
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">code</i>
+                    <input type="text" name="empdqrcode" id="empdqrcode" class="validate">
+                    <label for="empdqrcode" id="qrlabel">DQR code</label>
+                </div>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input type="text" name="fullname" id="fullname" class="validate">
+                    <label for="fullname" id="fnlabel">Fullname</label>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <button class="btn-flat waves-effect waves-dark" id="updateEmployeeBtn">Update</button>
+                </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <button class="btn-flat waves-effect waves-dark" id="closeModal"><i class="material-icons">close</i></button>
+    </div>
+</div>
+
+<div class="modal modal-fixed-footer" id="addEmployee">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">code</i>
+                    <input type="text" name="addempdqrcode" id="addempdqrcode" class="validate">
+                    <label for="addempdqrcode">DQR code</label>
+                    <h6 class="center-align red-text hide" id="errQr"><b>Must not be empty!</b></h6>
+                </div>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input type="text" name="addfullname" id="addfullname" class="validate">
+                    <label for="addfullname">Fullname</label>
+                    <h6 class="center-align red-text hide" id="errName"><b>Must not be empty!</b></h6>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <button class="btn-flat waves-effect waves-dark" id="addBtn">Add Employee</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn-flat waves-effect waves-dark" id="closeaddEmployeeModal"><i class="material-icons">close</i></button>
     </div>
 </div>
 
@@ -97,6 +273,88 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="addSuccess">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12 m12 l12 center-align">
+                <i class="material-icons large green-text">verified_user</i>
+            </div>
+            <div class="col s12 m12 l12 center-align">
+                <h5>Employee successfully added!</h5>
+            </div>
+            <div class="col s12 m12 l12 center-align">
+                <button class="btn-flat waves-effect waves-dark modal-close">confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteSite">
+    <div class="modal-content">
+        <div class="row">
+            <div class="input-field col s12 m12 l12 center-align">
+                <i class="material-icons large red-text">warning</i>
+            </div>
+            <div class="input-field col s12 m12 l12 center-align">
+                <input type="hidden" id="getSiteHiddenId">
+                <h6>Are you sure you want to delete this site?</h6>
+            </div>
+            <div class="input-field col s6 m6 l6 right-align">
+                <button class="red waves-effect waves-light btn" id="yesDeleteSiteBtn">Yes</button>
+            </div>
+            <div class="input-field col s6 m6 l6 left-align">
+                <button class="blue waves-effect waves-light btn modal-close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-fixed-footer" id="viewSite">
+    <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <h5 class="center-align">Site Details</h5>
+                <hr />
+                <input type="hidden" id="siteID">
+                <h6 class="center-align hide green-text" id="successSiteUpdateModal"><b>Site updated!</b></h6>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">location_on</i>
+                    <input type="text" name="modalSiteCode" id="modalSiteCode" class="validate">
+                    <label for="modalSiteCode" id="modalSiteCodelabel">Site Code</label>
+                </div>
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">business</i>
+                    <input type="text" name="modalSiteName" id="modalSiteName" class="validate">
+                    <label for="modalSiteName" id="modalSiteNamelabel">Site Name</label>
+                </div>
+                <div class="input-field col s12 m12 l12 center-align">
+                    <button class="btn-flat waves-effect waves-dark" id="modalUpdateBtn">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn-flat waves-effect waves-dark modal-close"><i class="material-icons">close</i></button>
+    </div>
+</div>
+
+<div class="modal" id="loadingModal">
+    <div class="modal-content center-align">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/script/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
